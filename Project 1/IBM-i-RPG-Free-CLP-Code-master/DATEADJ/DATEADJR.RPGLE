@@ -4,94 +4,90 @@ import java.util.Date;
 public class Main {
 
     public static void main(String[] args) {
-        
-        String piInDate; // input date parameter
-        int piAdj; // adjustment amount parameter 
-        String piAdjType; // adjustment type parameter
-        String piInFmt; // input date format parameter
-        String piOutFmt; // output date format parameter
-        
+
+        String piInDate; //input date 
+        int piAdj; //adjustment amount
+        String piAdjType; //adjustment type
+        String piInFmt; //input date format
+        String piOutFmt; //output date format
+
         SimpleDateFormat inFormat;
         SimpleDateFormat outFormat;
-        
-        String jobFmt; // job date format
-        String sysFmt; // system date format
-        
-        Date inputDate; // parsed input date
-        Date newDate; // calculated new date
-        
-        // get job and system date formats if needed
+        Date date;
+
+        // handle special input format values
         if (piInFmt.equals("*JOBFMT")) {
-            jobFmt = getJobDateFormat();
-            piInFmt = jobFmt;
+            piInFmt = getJobFormat(); 
+        } else if (piInFmt.equals("*SYSTEM")) {
+            piInFmt = getSystemFormat();
         }
+
+        // handle special output format values
         if (piOutFmt.equals("*JOBFMT")) {
-            jobFmt = getJobDateFormat();
-            piOutFmt = jobFmt;
-        }
-        if (piInFmt.equals("*SYSTEM")) {
-            sysFmt = getSystemDateFormat();
-            piInFmt = sysFmt;
-        }
-        if (piOutFmt.equals("*SYSTEM")) {
-            sysFmt = getSystemDateFormat();
-            piOutFmt = sysFmt;
-        }
-        
-        // set output format to input if *INFMT
-        if (piOutFmt.equals("*INFMT")) {
+            piOutFmt = getJobFormat();
+        } else if (piOutFmt.equals("*SYSTEM")) {
+            piOutFmt = getSystemFormat();
+        } else if (piOutFmt.equals("*INFMT")) {
             piOutFmt = piInFmt;
         }
-        
-        // handle special input date values
+
+        // handle special input date values  
         if (piInDate.equals("*SYSTEM")) {
-            inputDate = new Date(); // use current system date
+            piInDate = getSystemDate();
         } else if (piInDate.equals("*JOBDATE")) {
-            inputDate = getJobDate(); // use job date
-        } else {
-            // parse input date string
-            inFormat = new SimpleDateFormat(piInFmt);
-            inputDate = inFormat.parse(piInDate);
+            piInDate = getJobDate();
         }
-        
-        // calculate new date
+
+        // convert input date to Date object
+        inFormat = new SimpleDateFormat(piInFmt);
+        date = inFormat.parse(piInDate);
+
+        // adjust date
         if (piAdjType.equals("D")) {
             // adjust days
-            newDate = addDays(inputDate, piAdj);
+            date.setDate(date.getDate() + piAdj);
         } else if (piAdjType.equals("M")) {
             // adjust months
-            newDate = addMonths(inputDate, piAdj);
+            date.setMonth(date.getMonth() + piAdj);
         } else if (piAdjType.equals("Y")) {
-            // adjust years
-            newDate = addYears(inputDate, piAdj);
+            // adjust years  
+            date.setYear(date.getYear() + piAdj);
         }
-        
-        // format output date
+
+        // format output date 
         outFormat = new SimpleDateFormat(piOutFmt);
-        String outputDate = outFormat.format(newDate);
-        
-        // handle errors and invalid values
-        if (...) {
-            sendEscapeMessage(...);
+        String outputDate = outFormat.format(date);
+
+        // handle errors
+        if (date == null) {
+            // invalid date
+            sendErrorMessage();
         }
-        
-        // return output date string
+
+        // return output date
         return outputDate;
-        
+
     }
-    
-    // date calculation utility methods
-    
-    public static Date addDays(Date date, int days) {
-        ...
+
+    // utility methods
+    static String getJobFormat() {
+        // implementation
     }
-    
-    public static Date addMonths(Date date, int months) {
-        ...
+
+    static String getSystemFormat() {
+        // implementation 
     }
-    
-    public static Date addYears(Date date, int years) {
-        ...
+
+    static String getSystemDate() {
+        // implementation
     }
-    
+
+    static String getJobDate() {
+        // implementation
+    }
+
+    static void sendErrorMessage() {
+        // implementation
+    }
+
 }
